@@ -10,7 +10,7 @@ if (isset($_POST['_method']) && ($_POST['_method'] == 'GET' || $_POST['_method']
 }
 
 session_start();
-include('../config/path.php');
+define('PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 define('Lare', true);
 
 // configs
