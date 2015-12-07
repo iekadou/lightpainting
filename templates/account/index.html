@@ -1,0 +1,44 @@
+{% lare_extends "account/__base.html" "Quickies.Account" "__lare.html" %}
+{% block content %}
+    <div id="content">
+        <h1 class="page-header">{% _"Dashboard" %}</h1>
+        <p>{% _"Here you can find a overview of your recent activities on {{ SITE_NAME }}." {'{{ SITE_NAME }}': SITE_NAME} %}</p>
+        <h2 class="sub-header">{% _"Images" %}</h2>
+        <div class="row">
+            <div class="placeholders">
+                <div class="col-xs-6 col-xs-offset-3 col-sm-3 col-sm-offset-0 col-lg-2 placeholder text-center">
+                    <div class="img-responsive avatar"><div class="initials">{{ Account.get_images|length }}</div></div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-vertical-aligned">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="text-center">{% _"Image" %}</th>
+                            <th class="text-center">{% _"Edit" %}</th>
+                            <th class="text-center">{% _"Lightpaint" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for image in Account.get_images %}
+                            <tr>
+                                <td>{{ loop.revindex }}</td>
+                                <td class="text-center">{% if image.get_path %}<a href="/images_dir/{{ image.get_path }}" target="_blank"><img src="/images_dir/{{ image.get_path }}" style="max-height: 50px;"></a>{% else %}-{% endif %}</td>
+                                <td class="text-center"><a href="{% url 'account:image' image.get_id %}"><span class="fa fa-edit fa-2x"></span></a></td>
+                                <td class="text-center"><a href="{% url 'image' image.get_id %}"><span class="fa fa-camera fa-2x"></span></a></td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="3" class="text-center">{% _"No images, yet!" %}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if Account.get_user.is_activated %}
+                <a href="{% url 'account:image' %}">{% _"New Image, please." %}</a>
+            {% else %}
+                <a href="{% url 'account:activate' %}">{% _"Please activate your account, to create codes." %}</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}

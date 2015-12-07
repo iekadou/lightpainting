@@ -1,0 +1,20 @@
+{% lare_extends "__base.html" "Quickies" "__lare.html" %}
+{% block page %}
+    <div id="page">
+        <div class="home-hero">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <h1>
+                            {% _ "Lightpainting tool" %}
+                            
+                        </h1>
+                    </div>
+                    <div class="col-xs-6 col-xs-offset-3 text-center">
+                        <a href="{% url 'register' %}" class="btn btn-block btn-primary">{% _ "Register" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock page %}

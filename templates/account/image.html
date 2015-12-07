@@ -1,0 +1,26 @@
+{% lare_extends "account/__base.html" "Quickies.Account" "__lare.html" %}
+{% block content %}
+{% if form_method == 'POST' and not Account.get_user.is_activated %}
+    <div id="content">
+        <a href="{% url 'account:activate' %}">{% _"Please activate your account, to create images." %}</a>
+    </div>
+{% else %}
+    <div id="content">
+        <form class="form api-form" role="form" action="{% url 'api:account:image' %}" method="{{ form_method }}" enctype="multipart/form-data">
+            {% if form_method=='PUT' %}<input type="hidden" name="id" value="{{ Image.get_id }}">{% endif %}
+            <h2 class="page-header form-signin-heading">{% if form_method == 'POST' %}{% _"Create an Image" %}{% else %}{% _"Update your Image" %}{% endif %}</h2>
+            <div class="row">
+                <div class="form-group col-xs-12" style="position: relative;">
+                    <label class="control-label" for="id_image">{% _"Image*" %}:</label><br>
+                    {% if Image.get_path %}<a href="/images_dir/{{ Image.get_path }}" target="_blank"><img src="/images_dir/{{ Image.get_path }}" style="max-height: 100px; max-width: 20%; float:right;"></a>{% endif %}
+                    <input type="file" name="image" id="id_image" class="form-control"{% if Image.get_id %} style="width: 80%;"{% endif %}>
+                </div>
+            </div>
+            <p class="small">* {% _"Those fields are required." %}</p>
+            <br>
+            <button class="btn btn-primary" type="submit">{% _"Save" %}</button>
+            <button class="btn btn-default" type="reset">{% _"Reset" %}</button>
+        </form>
+    </div>
+{% endif %}
+{% endblock content %}

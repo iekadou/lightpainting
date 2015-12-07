@@ -1,0 +1,126 @@
+{% lare_extends "__base.html" "Quickies" "__lare.html" %}
+{% block page %}
+<div id="page">
+    <div id="imageslider" class="hide" style="background-color: #333; color: #999; height: 200%;">
+        <a style="position: absolute; top: 0; z-index: 100001;" class="btn btn-default btn-block" id="btn-back">{% _"back" %}</a>
+        <div style="background-color: #000; color: #999; width: 100%; height: 200%; position: absolute; top: 0; right: 0; z-index: 10000;"></div>
+        <div id="sliding-image-container" style="display: none; position: absolute; left: 50%; height: 100%; top: 60px; z-index: 10001;">
+            <img src="/images_dir/{{ Image.get_path }}" style="display: block; height: 98%; position: absolute; top: 1%;" class="sliding-image">
+        </div>
+    </div>
+    <div style="padding: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <div id="panel">
+                        <h2>{%_ "Speed" %}</h2><span id="speed_display">0.5</span><input type="hidden" id="speed" value="0.5">
+                        <div id="speed_slider"></div>
+                        <h2>{%_ "Countdown" %}</h2><span id="countdown_display">3</span><input type="hidden" id="countdown" value="3">
+                        <div id="countdown_slider"></div>
+                        <h2>{%_ "Width" %}</h2><span id="width_display">3</span><input type="hidden" id="width" value="3">
+                        <div id="width_slider"></div>
+                        <h2>{%_ "Repeat?" %}</h2>
+                        <input type="checkbox" id="repeat" name="repeat">
+                        <h2>{%_ "Repeat margin?" %}</h2><span id="repeat_margin_display">50</span><input type="hidden" id="repeat_margin" value="50">
+                        <div id="repeat_margin_slider"></div>
+                        <p>
+                            <br>
+                            <a href="#start" class="btn btn-default btn-start">start</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#panel').removeClass('hide');
+            $('#imageslider').addClass('hide');
+            $('body').css('padding-top', '65px');
+            showPanel();
+        });
+        function showPanel() {
+            $('#panel').removeClass('hide');
+            $('#imageslider').addClass('hide');
+            sliding = false;
+            $('body').css('padding-top', '65px');
+            $('#sliding-image').css({'background-position': "0"});
+            $( "#speed_slider" ).slider({
+                min: 0,
+                max: 1,
+                value: $( "#speed" ).val(),
+                step: 0.01,
+                slide: function( event, ui ) {
+                    $( "#speed_display" ).html( ui.value );
+                    $( "#speed" ).val( ui.value );
+                }
+            });
+            $( "#countdown_slider" ).slider({
+                min: 0,
+                max: 10,
+                value: $( "#countdown" ).val(),
+                step: 0.5,
+                slide: function( event, ui ) {
+                    $( "#countdown_display" ).html( ui.value );
+                    $( "#countdown" ).val( ui.value );
+                }
+            });
+            $( "#width_slider" ).slider({
+                min: 1,
+                max: 100,
+                value: $( "#width" ).val(),
+                step: 1,
+                slide: function( event, ui ) {
+                    $( "#width_display" ).html( ui.value );
+                    $( "#width" ).val( ui.value );
+                }
+            });
+            $( "#repeat_margin_slider" ).slider({
+                min: 1,
+                max: 1000,
+                value: $( "#repeat_margin" ).val(),
+                step: 1,
+                slide: function( event, ui ) {
+                    $( "#repeat_margin_display" ).html( ui.value );
+                    $( "#repeat_margin" ).val( ui.value );
+                }
+            });
+        }
+        $('#btn-back').off('click').on('click', function(e) {
+            e.preventDefault();
+            showPanel();
+        });
+        $('.btn-start').off('click').on('click', function(e) {
+            e.preventDefault();
+            $('body').css('padding', 0);
+            $('#panel').addClass('hide');
+            $('#imageslider').removeClass('hide');
+            sliding = true;
+            var $container = $('#sliding-image-container');
+            var width = $('#width').val();
+            $container.css({'overflow': 'hidden', 'width': width+"%", 'left': (100-width)/2+"%"});
+            $('.sliding-image').css({'left':$container.outerWidth() +'px'});
+
+            window.setTimeout(function() {$('#sliding-image-container').css({'display':'block'}); slide_image($('#speed').val()); }, $('#countdown').val()*1000);
+
+            $(document).scrollTop(60);
+        });
+
+        var sliding = false;
+        function slide_image(speed) {
+            if (sliding) {
+                var $image = $('.sliding-image');
+                $image.css({'left': "-="+parseFloat(speed*4)});
+                if ($('#repeat').is(':checked')) {
+                    if (parseInt($image.css('left')) < ($image.outerWidth()*(-1)) ) {
+                        $image.css({'left': (parseInt($('#sliding-image-container').outerWidth())+parseInt($( "#repeat_margin").val())) +'px'});
+                    }
+                }
+                window.setTimeout(function() { slide_image(speed); }, 1);
+            } else {
+                $('#sliding-image-container').css({'display':'none'});
+            }
+        }
+    </script>
+</div>
+{% endblock page %}
