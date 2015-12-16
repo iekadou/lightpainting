@@ -10,9 +10,12 @@
       $DB_NAME=< DATABASE NAME OF MYSQL DB >;
       $DB_USER="< USERNAME OF MYSQL DB USER>;
       $DB_PASS=< PASS OF MYSQL DB USER >;
-      ```
+```
 - adjust the path located at inc/include.php
 - import SQL file in DB
 - run http://..../migrate.php
+
+## Currently available
+This project is currently available under http://lightpainting.iekadou.com/
 
 ... to be completed
